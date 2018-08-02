@@ -23,23 +23,16 @@ they requested before they were asked to login.
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-//    public CustomAuthenticationSuccessHandler(AuthenticationManager authenticationManager) {
-//        super(authenticationManager);
-//    }
-
-    //temp
-    @Autowired
-    private UserService userService;
-
     @Autowired
     private TokenService tokenService;
 
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         System.out.println("cyk CustomAuthenticationSuccessHandler");
 
-        //TODO: get username?
-        tokenService.save(new Token(1L, "user", "tokenik"));
+        //TODO: how get username?
+        String username = "user";
+        String token = tokenService.generateAndSaveToken(username);
 
-        httpServletResponse.addHeader("token","tokenik" );
+        httpServletResponse.addHeader("token",token);
     }
 }

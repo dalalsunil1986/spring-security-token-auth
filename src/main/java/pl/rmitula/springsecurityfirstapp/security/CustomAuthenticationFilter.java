@@ -3,6 +3,7 @@ package pl.rmitula.springsecurityfirstapp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
@@ -30,25 +31,18 @@ public class CustomAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("tryk CustomAuthenticationFilter");
 
-       // final HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        //get token from header
         final String accessToken = ((HttpServletRequest) servletRequest).getHeader("token");
-
-        System.out.println(accessToken);
 
         Token token = tokenService.findByToken(accessToken);
 
         if (token != null) {
-            //user
             User user = userService.findByUsername(token.getUsername());
 
-            //auth
-            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("user", "password");
+            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, AuthorityUtils.createAuthorityList("ROLE_USER"));
             SecurityContextHolder.getContext().setAuthentication(auth);
-
         }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }

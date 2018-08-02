@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
-import pl.rmitula.springsecurityfirstapp.security.MyUserPrincipal;
+import pl.rmitula.springsecurityfirstapp.security.MyUserDetails;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -18,6 +18,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
-        return new MyUserPrincipal(user);
+        return new MyUserDetails(user);
     }
 }

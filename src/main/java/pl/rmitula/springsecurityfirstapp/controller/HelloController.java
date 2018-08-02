@@ -2,6 +2,7 @@ package pl.rmitula.springsecurityfirstapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +28,8 @@ public class HelloController {
     @GetMapping("/private")
     @PreAuthorize("hasRole('ROLE_USER')")
     public String helloPrivate(HttpServletRequest request) {
-        Principal principal = request.getUserPrincipal();
-        return "Hello " + principal.getName() + " in private area!";
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return "Hello " + user.getUsername() + " in private area!";
     }
 
     @GetMapping("/users")

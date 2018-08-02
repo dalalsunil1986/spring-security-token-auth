@@ -8,7 +8,7 @@ import pl.rmitula.springsecurityfirstapp.model.User;
 import java.util.Collection;
 
 @AllArgsConstructor
-public class MyUserPrincipal implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
     private User user;
 

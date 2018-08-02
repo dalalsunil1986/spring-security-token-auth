@@ -35,12 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationFilter customAuthenticationFilter;
 
-
-//    @Bean
-//    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() throws Exception {
-//        return new CustomAuthenticationSuccessHandler(customAuthenticationManager());
-//    }
-
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
         return authenticationManager();
@@ -62,7 +56,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/public").permitAll()
                 .antMatchers("/auth").permitAll()
-                .antMatchers("/console*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -83,9 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("user").password(passwordEncoder().encode("password"))
-//                .authorities("ROLE_USER");
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(usersQuery)
