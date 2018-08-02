@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -30,6 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
+    private CustomAuthenticationFilter customAuthenticationFilter;
 
 
 //    @Bean
@@ -58,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/public").permitAll()
                 .antMatchers("/auth").permitAll()
+                .antMatchers("/console*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -68,13 +73,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                     .authenticationEntryPoint(entryPoint)
                 .and()
-                .csrf()
-                .disable()
-                .cors();
-
-                //.addFilter(new CustomAuthorizationFilter(authenticationManagerBean(), userRepository));
-
-                //.addFilterAt(customAuthenticationSuccessHandler(), BasicAuthenticationFilter.class);
+                .csrf().disable()
+                .cors()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(customAuthenticationFilter, BasicAuthenticationFilter.class);
     }
 
     @Autowired

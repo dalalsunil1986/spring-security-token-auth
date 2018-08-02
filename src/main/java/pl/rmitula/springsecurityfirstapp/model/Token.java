@@ -6,21 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
-@Entity(name = "users")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+public class Token {
 
     @Id
     @GeneratedValue
     private Long id;
-
     private String username;
-
-    private String password;
+    private String token;
 
 }

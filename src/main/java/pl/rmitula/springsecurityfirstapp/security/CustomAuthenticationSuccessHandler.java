@@ -1,10 +1,14 @@
 package pl.rmitula.springsecurityfirstapp.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import pl.rmitula.springsecurityfirstapp.model.Token;
 import pl.rmitula.springsecurityfirstapp.model.User;
+import pl.rmitula.springsecurityfirstapp.service.TokenService;
+import pl.rmitula.springsecurityfirstapp.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +27,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 //        super(authenticationManager);
 //    }
 
+    //temp
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TokenService tokenService;
+
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
         System.out.println("cyk CustomAuthenticationSuccessHandler");
-        httpServletResponse.addHeader("Token","blabla");
+
+        //TODO: get username?
+        tokenService.save(new Token(1L, "user", "tokenik"));
+
+        httpServletResponse.addHeader("token","tokenik" );
     }
 }
