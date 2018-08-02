@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -27,6 +29,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+
+//    @Bean
+//    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() throws Exception {
+//        return new CustomAuthenticationSuccessHandler(customAuthenticationManager());
+//    }
+
+    @Bean
+    public AuthenticationManager customAuthenticationManager() throws Exception {
+        return authenticationManager();
+    }
+
+    @Autowired
     @Qualifier("dataSource")
     private DataSource dataSource;
 
@@ -36,20 +52,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${spring.queries.roles-query}")
     private String rolesQuery;
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 .antMatchers("/public").permitAll()
+                .antMatchers("/auth").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic()
-                .authenticationEntryPoint(entryPoint);
-        http
                 .formLogin()
-                .successHandler(customAuthenticationSuccessHandler);
-        http.csrf().disable();
+                    .loginPage("/auth")
+                    .successHandler(customAuthenticationSuccessHandler)
+                    .failureHandler(customAuthenticationFailureHandler)
+                .and()
+                .exceptionHandling()
+                    .authenticationEntryPoint(entryPoint)
+                .and()
+                .csrf()
+                .disable()
+                .cors();
+
+                //.addFilter(new CustomAuthorizationFilter(authenticationManagerBean(), userRepository));
+
+                //.addFilterAt(customAuthenticationSuccessHandler(), BasicAuthenticationFilter.class);
     }
 
     @Autowired
