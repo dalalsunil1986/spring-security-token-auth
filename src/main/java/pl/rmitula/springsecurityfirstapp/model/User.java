@@ -1,5 +1,6 @@
 package pl.rmitula.springsecurityfirstapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,15 @@ public class User implements Serializable {
     private String username;
 
     private String password;
+
+    @OneToOne(mappedBy = "head", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Department departmentHead;
+
+    @ManyToOne
+    @JoinColumn(name="department_id")
+    //TODO: Add nullable
+    private Department department;
 
     public User(String username, String password) {
         this.username = username;

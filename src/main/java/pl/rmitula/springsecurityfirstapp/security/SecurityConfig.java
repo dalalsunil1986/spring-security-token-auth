@@ -56,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/public").permitAll()
                 .antMatchers("/auth").permitAll()
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                // FIXME: Testing only!!!
                 .and()
                 .formLogin()
                     .loginPage("/auth")

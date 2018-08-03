@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.rmitula.springsecurityfirstapp.model.User;
-import pl.rmitula.springsecurityfirstapp.security.CustomAuthenticationFailureHandler;
 import pl.rmitula.springsecurityfirstapp.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
-public class AuthController {
+@RequestMapping(value = "/api")
+public class UserController {
 
-    private static final Logger LOG = Logger.getLogger(AuthController.class.getName());
+    private static final Logger LOG = Logger.getLogger(UserController.class.getName());
 
     @Autowired
     private UserService userService;
@@ -36,10 +37,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public List<User> usersList() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOG.info("GET: /users by user:" + user.getUsername());
         return userService.findAll();
     }
 }
