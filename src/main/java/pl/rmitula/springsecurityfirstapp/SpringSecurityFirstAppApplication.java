@@ -30,10 +30,12 @@ public class SpringSecurityFirstAppApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 
 		userRepository.deleteAll();
-		userRepository.save(new User(1L, "user", passwordEncoder.encode("password")));
-		//userRepository.findAll().stream().forEach(user -> System.out.println(user.getUsername()));
+		userRepository.save(new User("user", passwordEncoder.encode("password")));
+		userRepository.save(new User("rmitula", passwordEncoder.encode("password")));
+		userRepository.findAll().stream().forEach(user -> System.out.println(user.getUsername()));
 
 		roleRepository.deleteAll();
-		roleRepository.save(new Role(1L, "user", "ROLE_USER"));
+		roleRepository.save(new Role("user", "ROLE_USER"));
+		roleRepository.save(new Role("rmitula", "ROLE_USER"));
 	}
 }

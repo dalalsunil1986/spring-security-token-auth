@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -31,11 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
-
-//    @Bean
-//    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() throws Exception {
-//        return new CustomAuthenticationSuccessHandler(customAuthenticationManager());
-//    }
+    @Autowired
+    private CustomAuthenticationFilter customAuthenticationFilter;
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -68,20 +66,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                     .authenticationEntryPoint(entryPoint)
                 .and()
-                .csrf()
-                .disable()
-                .cors();
-
-                //.addFilter(new CustomAuthorizationFilter(authenticationManagerBean(), userRepository));
-
-                //.addFilterAt(customAuthenticationSuccessHandler(), BasicAuthenticationFilter.class);
+                .csrf().disable()
+                .cors()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(customAuthenticationFilter, BasicAuthenticationFilter.class);
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("user").password(passwordEncoder().encode("password"))
-//                .authorities("ROLE_USER");
         auth.
                 jdbcAuthentication()
                 .usersByUsernameQuery(usersQuery)
