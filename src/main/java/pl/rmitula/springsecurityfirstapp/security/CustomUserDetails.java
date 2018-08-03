@@ -1,6 +1,9 @@
 package pl.rmitula.springsecurityfirstapp.security;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.rmitula.springsecurityfirstapp.model.User;
@@ -8,7 +11,10 @@ import pl.rmitula.springsecurityfirstapp.model.User;
 import java.util.Collection;
 
 @AllArgsConstructor
-public class MyUserDetails implements UserDetails {
+@NoArgsConstructor
+@Getter
+@Setter
+public class CustomUserDetails implements UserDetails {
 
     private User user;
 
@@ -19,12 +25,12 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getUsername();
     }
 
     @Override

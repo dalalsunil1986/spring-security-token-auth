@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.rmitula.springsecurityfirstapp.model.Token;
 import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.TokenRepository;
+import pl.rmitula.springsecurityfirstapp.utils.TokenGenerator;
 
 @Service
 public class TokenService {
@@ -17,14 +18,11 @@ public class TokenService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public String generateAndSaveToken(String username) {
-        //TODO: Generate tokens in another class
-        String myToken = passwordEncoder.encode(username);
-        Token  token = new Token();
-        token.setToken(myToken);
+    public void saveToken(String username, String generatedToken) {
+        Token token = new Token();
+        token.setToken(generatedToken);
         token.setUsername(username);
         tokenRepository.save(token);
-        return myToken;
     }
 
     public boolean isTokenValid(String accessToken) {
