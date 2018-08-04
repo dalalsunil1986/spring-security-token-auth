@@ -8,4 +8,6 @@ import pl.rmitula.springsecurityfirstapp.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+
+    User findByToken(String accessToken);
 }

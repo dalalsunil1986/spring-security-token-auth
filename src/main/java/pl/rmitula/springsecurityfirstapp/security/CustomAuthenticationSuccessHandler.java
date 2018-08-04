@@ -1,5 +1,6 @@
 package pl.rmitula.springsecurityfirstapp.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ By default a SavedRequestAwareAuthenticationSuccessHandler is used, which means 
 they requested before they were asked to login.
  */
 @Component
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private static final Logger LOG = Logger.getLogger(CustomAuthenticationSuccessHandler.class.getName());
@@ -37,13 +39,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private TokenGenerator tokenGenerator;
 
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-        LOG.info("CustomAuthenticationSuccessHandler triggered");
-
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-        String customUserDetails = loggedInUser.getName();
         String generatedToken = tokenGenerator.generateToken(loggedInUser.getName());
-        tokenService.saveToken(customUserDetails, generatedToken);
-
+        log.info("Saving new token: " + generatedToken);
+        tokenService.saveToken(loggedInUser.getName(), generatedToken);
         httpServletResponse.addHeader(tokenName, generatedToken);
     }
 }

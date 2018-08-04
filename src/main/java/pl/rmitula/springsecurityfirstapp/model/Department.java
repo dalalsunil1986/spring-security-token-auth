@@ -28,4 +28,8 @@ public class Department implements Serializable {
     @OneToMany
     private List<User> userList;
 
+    public Department(String name, String city) {
+        this.name = name;
+        this.city = city;
+    }
 }

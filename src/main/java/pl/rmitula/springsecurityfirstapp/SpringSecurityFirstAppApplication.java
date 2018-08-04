@@ -13,6 +13,7 @@ import pl.rmitula.springsecurityfirstapp.repository.RoleRepository;
 import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
 import pl.rmitula.springsecurityfirstapp.security.CustomAuthenticationSuccessHandler;
 
+import java.time.LocalDateTime;
 import java.util.logging.Logger;
 
 @SpringBootApplication
@@ -51,15 +52,24 @@ public class SpringSecurityFirstAppApplication implements CommandLineRunner {
 		roleRepository.save(new Role("user", "ROLE_USER"));
 		roleRepository.save(new Role("rmitula", "ROLE_USER"));
 
-//		LOG.info("inserting new departments to database");
-//		departmentRepository.save(new Department("Department 1", "Rzeszow")); // TODO: A jak chce tu dac usera?
-//		departmentRepository.save(new Department("Department 2", "Wrocław"));
-//		departmentRepository.save(new Department("Department 3", "Gdańsk"));
+		Department department = new Department("Department 3", "Gdańsk");
+		LOG.info("inserting new departments to database");
+		departmentRepository.save(new Department("Department 1", "Rzeszow")); // TODO: A jak chce tu dac usera?
+		departmentRepository.save(new Department("Department 2", "Wrocław"));
+		departmentRepository.save(department);
 
 		LOG.info("inserting new users to database");
-		userRepository.save(new User("user", passwordEncoder.encode("password")));
-		userRepository.save(new User("rmitula", passwordEncoder.encode("password")));
-		//userRepository.findAll().stream().forEach(user -> System.out.println(user.getUsername()));
+		User ceo = User.builder().username("rmitula").password("password").firstname("Rafal").lastname("Mitula").privatePhoneNumber(664362282)
+                .businessPhoneNumber(664372927).active(true).email("rmitula@gmail.com").salary(3500).dateOfEmployment(LocalDateTime.now())
+                .dateOfEmployment(LocalDateTime.now()).lastLogin(LocalDateTime.now()).build();
+		userRepository.save(ceo);
+
+//		userRepository.save(new User("rmitula", passwordEncoder.encode("password")));
+//		userRepository.findAll().stream().forEach(user -> System.out.println(user.getUsername()));
+
+		// create user without department programmaticly
+
+
 
 	}
 }
