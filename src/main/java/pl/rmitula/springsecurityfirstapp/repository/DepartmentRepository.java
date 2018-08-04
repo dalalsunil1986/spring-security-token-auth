@@ -7,5 +7,5 @@ import pl.rmitula.springsecurityfirstapp.model.User;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-    Department findByHead(User head);
+    Department findByHeadUser(User user);
 }

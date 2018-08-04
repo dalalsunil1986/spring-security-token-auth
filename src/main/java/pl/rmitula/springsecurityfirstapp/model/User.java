@@ -24,7 +24,7 @@ public class User implements Serializable {
 
     private String password;
 
-    @OneToOne(mappedBy = "head", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "headUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Department departmentHead;
 

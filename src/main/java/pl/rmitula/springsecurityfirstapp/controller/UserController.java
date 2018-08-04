@@ -1,5 +1,6 @@
 package pl.rmitula.springsecurityfirstapp.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,16 +16,14 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(value = "/api")
+@Slf4j
 public class UserController {
-
-    private static final Logger LOG = Logger.getLogger(UserController.class.getName());
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/public")
     public String helloPublic() {
-        LOG.info("GET: /public");
         return "Hello, this is public endpoint!";
     }
 
@@ -32,7 +31,6 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public String helloPrivate(HttpServletRequest request) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        LOG.info("GET: /private by user:" + user.getUsername());
         return "Hello " + user.getUsername() + " in private area!";
     }
 

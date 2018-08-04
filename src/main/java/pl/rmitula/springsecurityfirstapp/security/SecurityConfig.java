@@ -54,13 +54,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/public").permitAll()
-                .antMatchers("/auth").permitAll()
-                //.anyRequest().authenticated()
+                .antMatchers("/api/public").permitAll()
+                .antMatchers("/api/auth").permitAll()
+                .anyRequest().authenticated()
                 // FIXME: Testing only!!!
                 .and()
                 .formLogin()
-                    .loginPage("/auth")
+                    .loginPage("/api/auth")
                     .successHandler(customAuthenticationSuccessHandler)
                     .failureHandler(customAuthenticationFailureHandler)
                 .and()

@@ -1,9 +1,6 @@
 package pl.rmitula.springsecurityfirstapp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,23 +11,21 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Department implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
+
     private String name;
+
     private String city;
 
     @OneToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "head_id")
-    private User head;
+    private User headUser;
 
     @OneToMany
     private List<User> userList;
 
-    public Department(String name, String city) {
-        this.name = name;
-        this.city = city;
-    }
 }

@@ -1,15 +1,11 @@
 package pl.rmitula.springsecurityfirstapp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.DepartmentDto;
-import pl.rmitula.springsecurityfirstapp.exception.NotEmployeesFoundExcpetion;
-import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
-import pl.rmitula.springsecurityfirstapp.model.Department;
-import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.service.DepartmentService;
-import pl.rmitula.springsecurityfirstapp.service.UserService;
 import pl.rmitula.springsecurityfirstapp.utils.Converter;
 
 import javax.validation.Valid;
@@ -23,8 +19,6 @@ public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
 
-    private UserService userService;
-
     @GetMapping
     public List<DepartmentDto> getDepartmentsList() {
         return departmentService.findAll().stream().map(department -> Converter.toDepartmentDto(department)).collect(Collectors.toList());
@@ -36,8 +30,8 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public Long createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
-        return departmentService.create(departmentDto.getName(), departmentDto.getCity(), departmentDto.getHead());
+    public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
+        return new ResponseEntity<>(departmentService.create(departmentDto.getName(), departmentDto.getCity(), departmentDto.getHeadUser()), HttpStatus.CREATED);
     }
 
     @DeleteMapping("{id}")

@@ -15,9 +15,6 @@ public class TokenService {
     @Autowired
     private TokenRepository tokenRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public void saveToken(String username, String generatedToken) {
         Token token = new Token();
         token.setToken(generatedToken);

@@ -3,6 +3,7 @@ package pl.rmitula.springsecurityfirstapp.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.rmitula.springsecurityfirstapp.exception.BadRequestException;
 import pl.rmitula.springsecurityfirstapp.exception.NotEmployeesFoundExcpetion;
 import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
 import pl.rmitula.springsecurityfirstapp.model.Department;
@@ -12,6 +13,7 @@ import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,20 +30,22 @@ public class DepartmentService {
     }
 
     public Department findOne(Long id) {
-        Department department = departmentRepository.getOne(id);
-        //TODO: exception handling
-        return department;
+        Optional<Department> department = departmentRepository.findById(id);
+        if (department.isPresent()) {
+            log.info("Returning user with id: " + id);
+            return department.get();
+        } else {
+            throw new NotFoundException("Not found department with id: " + id);
+        }
     }
 
     public void delete(Long id) {
-        Department department = departmentRepository.getOne(id);
-
-        if(department != null) {
-
-            if (department.getUserList().stream().count() == 0) {
+        Optional<Department> department = departmentRepository.findById(id);
+        if(department.isPresent()) {
+            if (department.get().getUserList().stream().count() == 0) {
                 throw new NotEmployeesFoundExcpetion("Not found any employees in department with id: " + id);
             }
-
+            log.info("Deleting user with id: " + id);
             departmentRepository.deleteById(id);
         } else {
             throw new NotFoundException("Not found department with id: " + id);
@@ -49,31 +53,24 @@ public class DepartmentService {
     }
 
     @Transactional
-    public Long create(String name, String city, Long head) {
-        //TODO: RETURN CREATED!
-        //TODO: Add more logic here
-        User headUser = userRepository.getOne(head);
-        //FIXME: Getting Unable to find pl.rmitula.springsecurityfirstapp.model.User with id 1", with unknown user id provided
-        if (headUser != null) {
-            Department departmentUser = departmentRepository.findByHead(headUser);
-
+    public Long create(String name, String city, Long headUserId) {
+        Optional<User> headUser = userRepository.findById(headUserId);
+        if (headUser.isPresent()) {
+            Department departmentUser = departmentRepository.findByHeadUser(headUser.get());
             if (departmentUser == null) {
-                log.info("Creating new department called " + name + "with head: " + headUser);
+                log.info("Creating new department called " + name + "with headUser: " + headUser);
                 Department department = new Department();
                 department.setName(name);
-                department.setHead(headUser);
+                department.setHeadUser(headUser.get());
                 department.setCity(city);
                 departmentRepository.save(department);
+                log.info("Creating new department:  " + department.toString());
+                return department.getId();
             } else {
-                //TODO: Ask if needed?
-                throw new NotFoundException("User with id " + head + " is a head of department with id: " + departmentUser.getId());
+                throw new BadRequestException("User with id " + headUserId + " is a head user of department with id " + departmentUser.getId() + " (" + departmentUser.getName() + ")");
             }
         } else {
-            throw new NotFoundException("Not found user (department head) with id: " + head);
+            throw new NotFoundException("Not found user with id: " + headUserId);
         }
-
-
-        return null;
-
     }
 }
