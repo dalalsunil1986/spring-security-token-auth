@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
+@Entity(name = "departments")
 @Getter
 @Setter
 @NoArgsConstructor

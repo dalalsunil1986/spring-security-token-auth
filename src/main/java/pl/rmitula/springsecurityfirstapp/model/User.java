@@ -9,7 +9,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity(name = "users")
+@Entity
+@Table(name="users")
 @Getter
 @Setter
 @NoArgsConstructor

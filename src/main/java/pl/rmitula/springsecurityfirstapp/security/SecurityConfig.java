@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/public").permitAll()
                 .antMatchers("/api/auth").permitAll()
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
                 // FIXME: Testing only!!!
                 .and()
                 .formLogin()
