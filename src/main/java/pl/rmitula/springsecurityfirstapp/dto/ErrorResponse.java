@@ -1,4 +1,4 @@
-package pl.rmitula.springsecurityfirstapp.model;
+package pl.rmitula.springsecurityfirstapp.dto;
 
 
 import lombok.AllArgsConstructor;

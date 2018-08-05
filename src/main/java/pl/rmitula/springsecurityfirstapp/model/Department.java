@@ -1,5 +1,6 @@
 package pl.rmitula.springsecurityfirstapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,8 +23,10 @@ public class Department implements Serializable {
 
     private String city;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private User headUser;
+    // Department manager FK
+    @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Manager manager;
 
     @OneToMany
     private List<User> userList;

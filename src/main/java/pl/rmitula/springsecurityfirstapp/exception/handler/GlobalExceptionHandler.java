@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.rmitula.springsecurityfirstapp.exception.BadRequestException;
 import pl.rmitula.springsecurityfirstapp.exception.NotEmployeesFoundExcpetion;
 import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
-import pl.rmitula.springsecurityfirstapp.model.ErrorResponse;
+import pl.rmitula.springsecurityfirstapp.dto.ErrorResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

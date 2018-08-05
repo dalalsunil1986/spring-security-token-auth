@@ -59,7 +59,7 @@ public class SpringSecurityFirstAppApplication implements CommandLineRunner {
 		departmentRepository.save(department);
 
 		LOG.info("inserting new users to database");
-		User ceo = User.builder().username("rmitula").password("password").firstname("Rafal").lastname("Mitula").privatePhoneNumber(664362282)
+		User ceo = User.builder().username("rmitula").password(passwordEncoder.encode("password")).firstname("Rafal").lastname("Mitula").privatePhoneNumber(664362282)
                 .businessPhoneNumber(664372927).active(true).email("rmitula@gmail.com").salary(3500).dateOfEmployment(LocalDateTime.now())
                 .dateOfEmployment(LocalDateTime.now()).lastLogin(LocalDateTime.now()).build();
 		userRepository.save(ceo);

@@ -29,10 +29,10 @@ public class DepartmentController {
         return Converter.toDepartmentDto(departmentService.findOne(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
-        return new ResponseEntity<>(departmentService.create(departmentDto.getName(), departmentDto.getCity(), departmentDto.getHeadUser()), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
+//        return new ResponseEntity<>(departmentService.create(departmentDto.getName(), departmentDto.getCity(), HttpStatus.CREATED);
+//    }
 
     @DeleteMapping("{id}")
     public void deleteDepartment(@PathVariable Long id) {

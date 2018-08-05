@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Date;
 
 @Entity
@@ -55,14 +56,24 @@ public class User implements Serializable {
 
     private LocalDateTime lastLogin;
 
-    @OneToOne(mappedBy = "headUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Department departmentHead;
+    // Recursive relationship
+//    @ManyToOne
+//    private User supervisor;
+//
+//    @OneToMany(mappedBy="supervisor")
+//    private Collection<User> users;
 
+    // Department manager FK
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Manager manager;
+
+    // Token relationship
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Token token;
 
+    // Department relationship
     @ManyToOne
     @JoinColumn(name="department_id")
     private Department department;

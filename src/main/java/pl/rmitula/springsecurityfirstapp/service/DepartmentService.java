@@ -52,25 +52,25 @@ public class DepartmentService {
         }
     }
 
-    @Transactional
-    public Long create(String name, String city, Long headUserId) {
-        Optional<User> headUser = userRepository.findById(headUserId);
-        if (headUser.isPresent()) {
-            Department departmentUser = departmentRepository.findByHeadUser(headUser.get());
-            if (departmentUser == null) {
-                log.info("Creating new department called " + name + "with headUser: " + headUser);
-                Department department = new Department();
-                department.setName(name);
-                department.setHeadUser(headUser.get());
-                department.setCity(city);
-                departmentRepository.save(department);
-                log.info("Creating new department:  " + department.toString());
-                return department.getId();
-            } else {
-                throw new BadRequestException("User with id " + headUserId + " is a head user of department with id " + departmentUser.getId() + " (" + departmentUser.getName() + ")");
-            }
-        } else {
-            throw new NotFoundException("Not found user with id: " + headUserId);
-        }
-    }
+//    @Transactional
+//    public Long create(String name, String city) {
+//        Optional<User> headUser = userRepository.findById(headUserId);
+//        if (headUser.isPresent()) {
+//            //Department departmentUser = departmentRepository.findByHeadUser(headUser.get());
+//            //if (departmentUser == null) {
+//                log.info("Creating new department called " + name + "with headUser: " + headUser);
+//                Department department = new Department();
+//                department.setName(name);
+//                //department.setManager(headUser.get());
+//                department.setCity(city);
+//                departmentRepository.save(department);
+//                log.info("Creating new department:  " + department.toString());
+//                return department.getId();
+////            } else {
+////                throw new BadRequestException("User with id " + headUserId + " is a head user of department with id " + departmentUser.getId() + " (" + departmentUser.getName() + ")");
+////            }
+//        } else {
+//            throw new NotFoundException("Not found user with id: " + headUserId);
+//        }
+//    }
 }

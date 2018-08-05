@@ -1,18 +1,19 @@
 package pl.rmitula.springsecurityfirstapp.utils;
 
 import pl.rmitula.springsecurityfirstapp.dto.DepartmentDto;
+import pl.rmitula.springsecurityfirstapp.dto.ManagerDto;
 import pl.rmitula.springsecurityfirstapp.dto.UserDto;
 import pl.rmitula.springsecurityfirstapp.model.Department;
+import pl.rmitula.springsecurityfirstapp.model.Manager;
 import pl.rmitula.springsecurityfirstapp.model.User;
 
 public class Converter {
 
-    public static Department fromDepartmentDto(DepartmentDto departmentDto, User head) {
+    public static Department fromDepartmentDto(DepartmentDto departmentDto) {
         Department department = new Department();
         department.setId(departmentDto.getId());
         department.setName(departmentDto.getName());
         department.setCity(departmentDto.getCity());
-        department.setHeadUser(head);
         return department;
     }
 
@@ -21,7 +22,7 @@ public class Converter {
         departmentDto.setId(department.getId());
         departmentDto.setName(department.getName());
         departmentDto.setCity(department.getCity());
-        departmentDto.setHeadUser(department.getHeadUser().getId());
+        //departmentDto.setHeadUser(department.getHeadUser().getId());
         return departmentDto;
     }
 
@@ -39,7 +40,8 @@ public class Converter {
         userDto.setSalary(user.getSalary());
         userDto.setDateOfEmployment(user.getDateOfEmployment().toString());
         userDto.setLastLogin(user.getLastLogin().toString());
-   //     userDto.setDepartment(user.getDepartment().getId());
+        if (user.getDepartment() != null)
+        userDto.setDepartment(user.getDepartment().getId());
         return userDto;
     }
 
@@ -58,6 +60,15 @@ public class Converter {
 //        user.setLastLogin(userDto.getLastLogin());
 //        user.setDepartment(userDto.getDepartment());
         return user;
+    }
+
+    public static ManagerDto toManagerDto(Manager manager) {
+        ManagerDto managerDto = new ManagerDto();
+        managerDto.setId(manager.getId());
+        managerDto.setUser(manager.getUser().getId());
+        managerDto.setDepartment(manager.getDepartment().getId());
+        managerDto.setStartDate(manager.getStartDate().toString());
+        return managerDto;
     }
 }
 //    private Long id;
