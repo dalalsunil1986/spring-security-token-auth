@@ -8,9 +8,11 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import java.io.Serializable;
+import java.util.Collection;
 
-@Entity
+@Entity(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,10 +25,9 @@ public class Role implements Serializable {
 
     private String username;
 
-    private String role;
+    private String name;
 
-    public Role(String username, String role) {
-        this.username = username;
-        this.role = role;
-    }
+    @ManyToMany(mappedBy = "roles")
+    private Collection<User> users;
+
 }
