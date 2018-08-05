@@ -1,13 +1,14 @@
 package pl.rmitula.springsecurityfirstapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
 import pl.rmitula.springsecurityfirstapp.model.Token;
 import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.TokenRepository;
-import pl.rmitula.springsecurityfirstapp.utils.TokenGenerator;
+import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -16,20 +17,18 @@ public class TokenService {
     private TokenRepository tokenRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
 
     public void saveToken(String username, String generatedToken) {
-        Token token = new Token();
-        token.setToken(generatedToken);
-        token.setUsername(username);
-        tokenRepository.save(token);
-    }
-
-    public boolean isTokenValid(String accessToken) {
-        if (tokenRepository.findOneByToken(accessToken) != null) {
-           return true;
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isPresent()) {
+            Token token = new Token();
+            token.setToken(generatedToken);
+            token.setUser(user.get());
+            tokenRepository.save(token);
+        } else {
+            throw new NotFoundException("Not found user with username: " + username);
         }
-        return false;
     }
 
     public Token findByToken(String accessToken) {

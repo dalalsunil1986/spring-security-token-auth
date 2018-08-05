@@ -5,27 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Collection;
 
-@Entity
+@Entity(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String username;
+    private String name;
 
-    private String role;
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
+    private Collection<User> users;
 
-    public Role(String username, String role) {
-        this.username = username;
-        this.role = role;
-    }
 }

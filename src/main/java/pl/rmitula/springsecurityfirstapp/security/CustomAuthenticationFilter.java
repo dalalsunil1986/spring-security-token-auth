@@ -1,12 +1,10 @@
 package pl.rmitula.springsecurityfirstapp.security;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import pl.rmitula.springsecurityfirstapp.model.Token;
@@ -22,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
+@Slf4j
 public class CustomAuthenticationFilter extends GenericFilterBean {
 
     @Autowired
@@ -35,21 +34,15 @@ public class CustomAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
         final String accessToken = ((HttpServletRequest) servletRequest).getHeader(tokenName);
-
         Token token = tokenService.findByToken(accessToken);
-
         if (token != null) {
-            User user = userService.findByUsername(token.getUsername());
-
-            // FIXME: customUserDetails not used for now
-            //CustomUserDetails customUserDetails = new CustomUserDetails(user);
-
-            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, AuthorityUtils.createAuthorityList("ROLE_USER"));
+            User user = token.getUser();
+            CustomUserDetails customUserDetails = new CustomUserDetails(user);
+            log.info("Authenticated user with id: " + user.getId() + " " + customUserDetails.getAuthorities().toString());
+            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
         filterChain.doFilter(servletRequest, servletResponse);
     }
 }
