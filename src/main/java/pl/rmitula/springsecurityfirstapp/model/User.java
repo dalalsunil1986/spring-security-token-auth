@@ -2,7 +2,6 @@ package pl.rmitula.springsecurityfirstapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -10,14 +9,12 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
 @Getter
 @Setter
-@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -63,17 +60,14 @@ public class User implements Serializable {
 //    @OneToMany(mappedBy="supervisor")
 //    private Collection<User> users;
 
-    // Department manager FK
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Manager manager;
 
-    // Token relationship
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Token token;
 
-    // Department relationship
     @ManyToOne
     @JoinColumn(name="department_id")
     private Department department;
@@ -85,6 +79,6 @@ public class User implements Serializable {
                     name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(
                     name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
 }

@@ -5,8 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.ManagerDto;
-import pl.rmitula.springsecurityfirstapp.dto.UserDto;
-import pl.rmitula.springsecurityfirstapp.model.Manager;
 import pl.rmitula.springsecurityfirstapp.service.ManagerService;
 import pl.rmitula.springsecurityfirstapp.utils.Converter;
 
@@ -23,7 +21,7 @@ public class ManagerController {
 
     @GetMapping
     public List<ManagerDto> managersList() {
-        return managerService.findAll().stream().map(manager -> Converter.toManagerDto(manager)).collect(Collectors.toList());
+        return managerService.findAll().stream().map(Converter::toManagerDto).collect(Collectors.toList());
     }
 
     @PostMapping

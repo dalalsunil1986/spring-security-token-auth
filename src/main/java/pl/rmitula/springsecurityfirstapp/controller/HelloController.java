@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.rmitula.springsecurityfirstapp.model.User;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping(value = "/api")
 @Slf4j
@@ -21,9 +19,10 @@ public class HelloController {
     }
 
     @GetMapping("/private")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public String helloPrivate(HttpServletRequest request) {
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
+    public String helloPrivate() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return "Hello " + user.getUsername() + " in private area!";
     }
+
 }

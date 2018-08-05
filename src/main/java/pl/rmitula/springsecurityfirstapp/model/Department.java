@@ -5,7 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity(name = "departments")
 @Getter
@@ -23,16 +23,11 @@ public class Department implements Serializable {
 
     private String city;
 
-    // Department manager FK
-    @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private Manager manager;
 
-    @OneToMany
-    private List<User> userList;
+    @OneToMany(mappedBy = "department")
+    private Set<User> userList;
 
-    public Department(String name, String city) {
-        this.name = name;
-        this.city = city;
-    }
 }

@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.rmitula.springsecurityfirstapp.dto.UserDto;
 import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
 import pl.rmitula.springsecurityfirstapp.model.Department;
-import pl.rmitula.springsecurityfirstapp.model.Token;
 import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.DepartmentRepository;
 import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
@@ -36,7 +34,7 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).get();
     }
 
     public User findByToken(String accessToken) {

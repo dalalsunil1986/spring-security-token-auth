@@ -3,6 +3,7 @@ package pl.rmitula.springsecurityfirstapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.DepartmentDto;
 import pl.rmitula.springsecurityfirstapp.service.DepartmentService;
@@ -20,23 +21,32 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public List<DepartmentDto> getDepartmentsList() {
-        return departmentService.findAll().stream().map(department -> Converter.toDepartmentDto(department)).collect(Collectors.toList());
+        return departmentService.findAll().stream().map(Converter::toDepartmentDto).collect(Collectors.toList());
     }
 
     @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public DepartmentDto getOneDepartment(@PathVariable Long id) {
         return Converter.toDepartmentDto(departmentService.findOne(id));
     }
 
-//    @PostMapping
-//    public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
-//        return new ResponseEntity<>(departmentService.create(departmentDto.getName(), departmentDto.getCity(), HttpStatus.CREATED);
-//    }
+    @PostMapping
+    @PreAuthorize("hasRole('ROLE_CEO')")
+    public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
+        return new ResponseEntity<>(departmentService.create(Converter.fromDepartmentDto(departmentDto)), HttpStatus.CREATED);
+    }
+
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CEO')")
+    public void updateDepartment(@PathVariable Long id, @RequestBody @Valid DepartmentDto departmentDto) {
+        departmentService.update(id, departmentDto.getName(), departmentDto.getCity());
+    }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CEO')")
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.delete(id);
     }
-
 }

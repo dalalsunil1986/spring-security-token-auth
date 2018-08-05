@@ -10,10 +10,8 @@ import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.DepartmentRepository;
 import pl.rmitula.springsecurityfirstapp.repository.ManagerRepository;
 import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
-import pl.rmitula.springsecurityfirstapp.utils.DateMapper;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,5 +49,9 @@ public class ManagerService {
         } else {
             throw new NotFoundException("Not found user with id: " + userId);
         }
+    }
+
+    public Optional<Manager> findByUser(User user) {
+        return managerRepository.findByUser(user);
     }
 }

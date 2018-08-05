@@ -11,7 +11,6 @@ public class Converter {
 
     public static Department fromDepartmentDto(DepartmentDto departmentDto) {
         Department department = new Department();
-        department.setId(departmentDto.getId());
         department.setName(departmentDto.getName());
         department.setCity(departmentDto.getCity());
         return department;
@@ -22,7 +21,6 @@ public class Converter {
         departmentDto.setId(department.getId());
         departmentDto.setName(department.getName());
         departmentDto.setCity(department.getCity());
-        //departmentDto.setHeadUser(department.getHeadUser().getId());
         return departmentDto;
     }
 
@@ -56,9 +54,6 @@ public class Converter {
         user.setActive(userDto.isActive());
         user.setEmail(userDto.getEmail());
         user.setSalary(userDto.getSalary());
-//        user.setDateOfEmployment(userDto.getDateOfEmployment());
-//        user.setLastLogin(userDto.getLastLogin());
-//        user.setDepartment(userDto.getDepartment());
         return user;
     }
 
@@ -71,21 +66,3 @@ public class Converter {
         return managerDto;
     }
 }
-//    private Long id;
-//    private String name;
-//    private String city;
-//    private User headUser;
-
-//    private Long id;
-//    private String username;
-//    private String password;
-//    private String firstname;
-//    private String lastname;
-//    private Integer privatePhoneNumber;
-//    private Integer businessPhoneNumber;
-//    private boolean active;
-//    private String email;
-//    private Integer salary;
-//    private String dateOfEmployment;
-//    private String lastLogin;
-//    private Long department;

@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import pl.rmitula.springsecurityfirstapp.model.Token;
@@ -41,10 +38,9 @@ public class CustomAuthenticationFilter extends GenericFilterBean {
         Token token = tokenService.findByToken(accessToken);
         if (token != null) {
             User user = token.getUser();
-            // FIXME: customUserDetails not used for now
-            //CustomUserDetails customUserDetails = new CustomUserDetails(user);
-            log.info("Successfully authenticated user with id: " + user.getId());
-            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, AuthorityUtils.createAuthorityList("ROLE_USER"));
+            CustomUserDetails customUserDetails = new CustomUserDetails(user);
+            log.info("Authenticated user with id: " + user.getId() + " " + customUserDetails.getAuthorities().toString());
+            final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, customUserDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
         filterChain.doFilter(servletRequest, servletResponse);
