@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.UserDto;
 import pl.rmitula.springsecurityfirstapp.service.UserService;
@@ -22,12 +23,26 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDto> usersList() {
+    public List<UserDto> getUsersList() {
         return userService.findAll().stream().map(Converter::toUserDto).collect(Collectors.toList());
+    }
+
+    @GetMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CEO')")
+    public UserDto getOneUser(@PathVariable Long id) {
+        return Converter.toUserDto(userService.findOne(id));
+    }
+
+    //TODO: Refactor for salary
+    @PutMapping("{id}")
+    @PreAuthorize("hasRole('ROLE_CEO')")
+    public void updateUser(@PathVariable Long id, @RequestBody @Valid UserDto userDto) {
+        userService.update(id, Converter.fromUserDto(userDto), userDto.getDateOfEmployment(), userDto.getLastLogin(), userDto.getDepartment());
     }
 
     @PostMapping
     public ResponseEntity<Long> createUser(@RequestBody @Valid UserDto userDto) {
         return new ResponseEntity<>(userService.create(Converter.fromUserDto(userDto), userDto.getDateOfEmployment(), userDto.getLastLogin(), userDto.getDepartment()), HttpStatus.CREATED);
     }
+
 }

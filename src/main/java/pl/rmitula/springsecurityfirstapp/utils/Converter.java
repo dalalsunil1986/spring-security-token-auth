@@ -7,12 +7,16 @@ import pl.rmitula.springsecurityfirstapp.model.Department;
 import pl.rmitula.springsecurityfirstapp.model.Manager;
 import pl.rmitula.springsecurityfirstapp.model.User;
 
+//TODO: Component (For tests)
+//TODO: Split to UserMapper / DepartmentMapper, UserMapper
 public class Converter {
 
     public static Department fromDepartmentDto(DepartmentDto departmentDto) {
         Department department = new Department();
         department.setName(departmentDto.getName());
         department.setCity(departmentDto.getCity());
+        department.setMinSalary(departmentDto.getMinSalary());
+        department.setMaxSalary(departmentDto.getMaxSalary());
         return department;
     }
 
@@ -21,6 +25,8 @@ public class Converter {
         departmentDto.setId(department.getId());
         departmentDto.setName(department.getName());
         departmentDto.setCity(department.getCity());
+        departmentDto.setMaxSalary(department.getMaxSalary());
+        departmentDto.setMinSalary(department.getMinSalary());
         return departmentDto;
     }
 

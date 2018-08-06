@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.service.TokenService;
 import pl.rmitula.springsecurityfirstapp.utils.TokenGenerator;
 

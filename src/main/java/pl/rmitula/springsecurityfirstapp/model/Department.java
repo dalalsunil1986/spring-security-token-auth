@@ -30,4 +30,8 @@ public class Department implements Serializable {
     @OneToMany(mappedBy = "department")
     private Set<User> userList;
 
+    private Integer minSalary;
+
+    private Integer maxSalary;
+
 }

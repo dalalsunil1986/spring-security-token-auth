@@ -38,10 +38,11 @@ public class DepartmentController {
         return new ResponseEntity<>(departmentService.create(Converter.fromDepartmentDto(departmentDto)), HttpStatus.CREATED);
     }
 
+    //TODO: Refactor for salary
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_CEO')")
     public void updateDepartment(@PathVariable Long id, @RequestBody @Valid DepartmentDto departmentDto) {
-        departmentService.update(id, departmentDto.getName(), departmentDto.getCity());
+        departmentService.update(id, departmentDto.getName(), departmentDto.getCity(), departmentDto.getMinSalary(), departmentDto.getMaxSalary());
     }
 
     @DeleteMapping("{id}")
