@@ -1,7 +1,7 @@
 -- DEPARTMENTS
-INSERT INTO DEPARTMENTS VALUES(1, 'Rzeszow', 'Development');
-INSERT INTO DEPARTMENTS VALUES(2, 'Rzeszow', 'Human Resource Management');
-INSERT INTO DEPARTMENTS VALUES(3, 'Wroclaw', 'Finance');
+INSERT INTO DEPARTMENTS VALUES(1, 'Rzeszow', 5000, 2000, 'Development');
+INSERT INTO DEPARTMENTS VALUES(2, 'Rzeszow', 3000, 1000, 'Human Resource Management');
+INSERT INTO DEPARTMENTS VALUES(3, 'Wroclaw', 2500, 1000, 'Finance');
 
 -- USERS
 -- - CEO

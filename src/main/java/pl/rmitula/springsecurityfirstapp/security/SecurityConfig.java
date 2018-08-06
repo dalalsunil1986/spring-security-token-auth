@@ -62,7 +62,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/public").permitAll()
                 .antMatchers("/api/auth").permitAll()
                 .anyRequest().authenticated()
-                // FIXME: Testing only!!!
                 .and()
                 .formLogin()
                     .loginPage("/api/auth")

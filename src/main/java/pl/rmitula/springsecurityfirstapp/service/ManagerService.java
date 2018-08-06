@@ -54,4 +54,24 @@ public class ManagerService {
     public Optional<Manager> findByUser(User user) {
         return managerRepository.findByUser(user);
     }
+//
+//    public Manager findOne(Long id) {
+////        Optional<User> user = Optional.of((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+////        if (!request.isUserInRole("ROLE_CEO")) {
+////            if(!user.get().getDepartment().getId().equals(id)) {
+////                throw new AccessDeniedException("Access denied");
+////            }
+////        }
+////        Optional<Department> department = departmentRepository.findById(id);
+////        if (department.isPresent()) {
+////            log.info("Returning department with id: " + id);
+////            return department.get();
+////        } else {
+////            throw new NotFoundException("Not found department with id: " + id);
+////        }
+////        Optional<Manager> manager = managerRepository.findById(id);
+////        if (manager.isPresent()) {
+////
+////        }
+//    }
 }
