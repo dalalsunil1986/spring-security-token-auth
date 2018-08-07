@@ -2,19 +2,27 @@ package pl.rmitula.springsecurityfirstapp.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.rmitula.springsecurityfirstapp.exception.BadRequestException;
 import pl.rmitula.springsecurityfirstapp.exception.ConflictException;
 import pl.rmitula.springsecurityfirstapp.exception.NotFoundException;
 import pl.rmitula.springsecurityfirstapp.model.Department;
+import pl.rmitula.springsecurityfirstapp.model.Role;
 import pl.rmitula.springsecurityfirstapp.model.User;
 import pl.rmitula.springsecurityfirstapp.repository.DepartmentRepository;
+import pl.rmitula.springsecurityfirstapp.repository.RoleRepository;
 import pl.rmitula.springsecurityfirstapp.repository.UserRepository;
-import pl.rmitula.springsecurityfirstapp.utils.DateMapper;
+import pl.rmitula.springsecurityfirstapp.mapper.DateMapper;
+import pl.rmitula.springsecurityfirstapp.util.SalaryValidator;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -24,19 +32,35 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private DepartmentRepository departmentRepository;
 
     @Autowired
-    private DepartmentRepository departmentRepository;
+    private RoleRepository roleRepository;
+
+    @Autowired
+    public BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
     public List<User> findAll() {
         log.info("Returning all users");
         return userRepository.findAll();
     }
 
+    public User findOne(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            log.info("Returning user with id: " + id);
+            return user.get();
+        } else {
+            throw new NotFoundException("Not found user with id: " + id);
+        }
+    }
+
     @Transactional
-    //TODO: change salary (department range)
-    public Long create(User user, String dateOfEmployment, String lastLogin, Long departmentId) {
+    // TODO: check all
+    //TODO: Salary validate
+    public Long create(User user, String dateOfEmployment, String lastLogin, Long departmentId, Long roleId) {
         //check unique username
         Optional<User> optionalUserByUsername = userRepository.findByUsername(user.getUsername());
         if (optionalUserByUsername.isPresent()) {
@@ -54,41 +78,32 @@ public class UserService {
         //check department
         Optional<Department> department = departmentRepository.findById(departmentId);
         if (department.isPresent()) {
-            user.setDateOfEmployment(DateMapper.stringToDate(dateOfEmployment));
-            user.setLastLogin(DateMapper.stringToDate(lastLogin));
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setDepartment(department.get());
-            log.info("Creating user with username: " + user.getUsername());
-            return userRepository.save(user).getId();
+            Optional<Role> role = roleRepository.findById(roleId);
+            if (role.isPresent()) {
+                Set<Role> roles = new HashSet<>();
+                roles.add(role.get());
+                user.setDateOfEmployment(DateMapper.stringToDate(dateOfEmployment));
+                user.setLastLogin(DateMapper.stringToDate(lastLogin));
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                user.setDepartment(department.get());
+                user.setRoles(roles);
+                System.out.println(role.get().getName());
+                user.setSalary(SalaryValidator.validate(user, department.get()));
+                log.info("Creating user with username: " + user.getUsername());
+                return userRepository.save(user).getId();
+            } else {
+                throw new BadRequestException("Not found role with id: " + departmentId);
+            }
         } else {
-            throw new NotFoundException("Not found department with id: " + departmentId);
-        }
-    }
-
-    //TODO: Allow manager to check his own employees in department
-    public User findOne(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            log.info("Returning user with id: " + id);
-            return user.get();
-        } else {
-            throw new NotFoundException("Not found user with id: " + id);
+            throw new BadRequestException("Not found department with id: " + departmentId);
         }
     }
 
     @Transactional
-    //TODO: Check if user is not changing his username during login
     //TODO: code formatting
     public void update(Long id, User user, String dateOfEmployment, String lastLogin, Long departmentId) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
-            //check unique username
-            Optional<User> optionalUserByUsername = userRepository.findByUsername(user.getUsername());
-            if (optionalUserByUsername.isPresent()) {
-                if (!optionalUserByUsername.get().getId().equals(id)) {
-                    throw new ConflictException("User with this username already exists");
-                }
-            }
             //check unique email
             Optional<User> optionalUserByEmail = userRepository.findByEmail(user.getEmail());
             if (optionalUserByEmail.isPresent()) {
@@ -96,8 +111,7 @@ public class UserService {
                     throw new ConflictException("User with this email already exists");
                 }
             }
-            optionalUser.get().setUsername(user.getUsername());
-            optionalUser.get().setPassword(passwordEncoder.encode(user.getPassword()));
+            optionalUser.get().setPassword(bCryptPasswordEncoder.encode(user.getPassword()));// wrong
             optionalUser.get().setFirstname(user.getFirstname());
             optionalUser.get().setLastname(user.getLastname());
             optionalUser.get().setPrivatePhoneNumber(user.getPrivatePhoneNumber());

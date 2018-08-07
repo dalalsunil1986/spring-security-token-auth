@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.DepartmentDto;
 import pl.rmitula.springsecurityfirstapp.service.DepartmentService;
-import pl.rmitula.springsecurityfirstapp.utils.Converter;
+import pl.rmitula.springsecurityfirstapp.mapper.DtoMapper;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,22 +23,21 @@ public class DepartmentController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_MANAGER')")
     public List<DepartmentDto> getDepartmentsList() {
-        return departmentService.findAll().stream().map(Converter::toDepartmentDto).collect(Collectors.toList());
+        return departmentService.findAll().stream().map(DtoMapper::toDepartmentDto).collect(Collectors.toList());
     }
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     public DepartmentDto getOneDepartment(@PathVariable Long id) {
-        return Converter.toDepartmentDto(departmentService.findOne(id));
+        return DtoMapper.toDepartmentDto(departmentService.findOne(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_CEO')")
     public ResponseEntity<Long> createDepartment(@RequestBody @Valid DepartmentDto departmentDto) {
-        return new ResponseEntity<>(departmentService.create(Converter.fromDepartmentDto(departmentDto)), HttpStatus.CREATED);
+        return new ResponseEntity<>(departmentService.create(DtoMapper.fromDepartmentDto(departmentDto)), HttpStatus.CREATED);
     }
 
-    //TODO: Refactor for salary
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_CEO')")
     public void updateDepartment(@PathVariable Long id, @RequestBody @Valid DepartmentDto departmentDto) {

@@ -7,7 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.rmitula.springsecurityfirstapp.dto.ManagerDto;
 import pl.rmitula.springsecurityfirstapp.service.ManagerService;
-import pl.rmitula.springsecurityfirstapp.utils.Converter;
+import pl.rmitula.springsecurityfirstapp.mapper.DtoMapper;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,13 +22,13 @@ public class ManagerController {
 
     @GetMapping
     public List<ManagerDto> getmanagersList() {
-        return managerService.findAll().stream().map(Converter::toManagerDto).collect(Collectors.toList());
+        return managerService.findAll().stream().map(DtoMapper::toManagerDto).collect(Collectors.toList());
     }
 
 //    @GetMapping("{id}")
 //    @PreAuthorize("hasRole('ROLE_CEO')")
 //    public ManagerDto getOneManager(@PathVariable Long id) {
-//        return Converter.toManagerDto(managerService.findOne(id));
+//        return DtoMapper.toManagerDto(managerService.findOne(id));
 //    }
 
     //FIXME: not fully tested

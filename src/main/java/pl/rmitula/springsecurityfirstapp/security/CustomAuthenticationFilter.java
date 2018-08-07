@@ -26,9 +26,6 @@ public class CustomAuthenticationFilter extends GenericFilterBean {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private UserService userService;
-
     @Value("${security.tokenName}")
     private String tokenName;
 

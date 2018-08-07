@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import pl.rmitula.springsecurityfirstapp.service.TokenService;
-import pl.rmitula.springsecurityfirstapp.utils.TokenGenerator;
+import pl.rmitula.springsecurityfirstapp.util.TokenGenerator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +25,6 @@ they requested before they were asked to login.
 @Component
 @Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-
-    private static final Logger LOG = Logger.getLogger(CustomAuthenticationSuccessHandler.class.getName());
 
     @Value("${security.tokenName}")
     private String tokenName;

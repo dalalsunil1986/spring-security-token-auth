@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity(name = "roles")
 @Getter
@@ -23,6 +24,6 @@ public class Role implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private Collection<User> users;
+    private Set<User> users;
 
 }

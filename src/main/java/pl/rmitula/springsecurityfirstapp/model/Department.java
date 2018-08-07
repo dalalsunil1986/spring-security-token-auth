@@ -19,8 +19,10 @@ public class Department implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @NonNull
     private String name;
 
+    @NonNull
     private String city;
 
     @OneToOne(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
@@ -30,8 +32,10 @@ public class Department implements Serializable {
     @OneToMany(mappedBy = "department")
     private Set<User> userList;
 
+    @NonNull
     private Integer minSalary;
 
+    @NonNull
     private Integer maxSalary;
 
 }
