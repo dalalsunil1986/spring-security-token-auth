@@ -15,11 +15,9 @@ import java.util.logging.Logger;
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    private static final Logger LOG = Logger.getLogger(CustomAuthenticationFailureHandler.class.getName());
-
     @Override
-    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        //TODO: Add exception (401 Unauthorized)
-        httpServletResponse.setStatus(403);
+    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) {
+        log.info("Authentication failed");
+        httpServletResponse.setStatus(401);
     }
 }
